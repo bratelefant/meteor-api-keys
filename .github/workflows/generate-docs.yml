@@ -34,6 +34,9 @@ jobs:
             exit 0
           fi
 
+      - name: Merge Latest Changes
+        run: git merge origin/temporary-docs-branch
+
       - name: Commit and Push Changes to Temporary Branch
         run: |
           git config --local user.email "action@github.com"
@@ -68,7 +71,7 @@ jobs:
           }'
 
           # Merge the pull request (optional)
-          curl -s -X PUT -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$REPO_URL/pulls/$PR_NUMBER/merge"
+          # curl -s -X PUT -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$REPO_URL/pulls/$PR_NUMBER/merge"
 
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
