@@ -24,24 +24,32 @@ jobs:
       - name: Generate API Docs
         run: npx jsdoc2md *.js > API.md # Adjust the source files and output file name as needed
 
+      - name: Set Git User Identity
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
       - name: Commit API Documentation Changes
         run: |
           git add API.md
           git diff --staged --quiet || git commit -m "Update API documentation"
-      
+        
       - name: Push Changes
         run: |
           git push origin HEAD:main
-
+  
       - name: Fetch Latest Changes from Remote
         run: git fetch origin temporary-docs-branch
-
+  
       - name: Check for Changes
         run: |
           if git diff --quiet origin/temporary-docs-branch; then
             echo "No changes to push."
           else
             git merge origin/temporary-docs-branch
+  
+      - name: Merge Latest Changes
+        run: git merge --allow-unrelated-histories -m "Merge remote-tracking branch 'origin/temporary-docs-branch' into temporary-docs-branch" origin/temporary-docs-branch
 
       - name: Commit and Push Changes to Temporary Branch
         run: |
