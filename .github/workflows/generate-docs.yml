@@ -57,7 +57,7 @@ jobs:
       - name: Delete Branch and Exit if No Changes
         if: steps.check_changes.outputs.changed == 'false'
         run: |
-          git branch -d temporary-docs-branch
+          git push origin --delete temporary-docs-branch
           echo "No changes to commit, exiting workflow"
           exit 0
 
@@ -67,7 +67,7 @@ jobs:
           git add API.md
           git commit -m "Generate API documentation"
           git push origin temporary-docs-branch
-          
+
       - name: Create Pull Request
         if: success() # Only create a PR if the previous steps were successful
         id: create_pr
