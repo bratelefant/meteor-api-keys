@@ -13,6 +13,15 @@
 </dd>
 </dl>
 
+## Constants
+
+<dl>
+<dt><a href="#schema">schema</a></dt>
+<dd></dd>
+<dt><a href="#ApiKeys">ApiKeys</a></dt>
+<dd></dd>
+</dl>
+
 ## Functions
 
 <dl>
@@ -81,6 +90,16 @@ Publishes all keys belonging to the current user
 **Kind**: global variable  
 **Returns**: <code>Cursor</code> - - A cursor for all keys belonging to the user  
 **Locus**: server  
+<a name="schema"></a>
+
+## schema
+**Kind**: global constant  
+**Summary**: Represents the API key schema  
+<a name="ApiKeys"></a>
+
+## ApiKeys
+**Kind**: global constant  
+**Summary**: Represents the API key collection  
 <a name="generateKey"></a>
 
 ## generateKey() ⇒ <code>String</code>
