@@ -5,6 +5,7 @@ import SimpleSchema from 'simpl-schema';
 
 /**
  * @summary Represents the API key schema
+ * @type {SimpleSchema}
  */
 export const schema = new SimpleSchema({
   key: {
