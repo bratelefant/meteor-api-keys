@@ -97,6 +97,7 @@ jobs:
           curl -s -X PUT -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$REPO_URL/pulls/$PR_NUMBER/merge"
 
       - name: Delete temporary branch
+        if: steps.check_changes.outputs.changed == 'true'
         run: |
           git push origin --delete temporary-docs-branch
 
