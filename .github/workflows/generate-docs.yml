@@ -23,7 +23,7 @@ jobs:
         run: npm install
 
       - name: Generate API Docs
-        run: npx jsdoc2md -o API.md *.js
+        run: npx jsdoc2md *.js > API.md
 
       - name: Commit and Push Changes
         run: |
