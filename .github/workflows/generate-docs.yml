@@ -28,7 +28,6 @@ jobs:
       - name: Create temporary branch
         run: |
           git checkout -b temporary-docs-branch
-          git pull origin main
           git push origin temporary-docs-branch
 
       - name: Fetch Latest Changes from Remote
@@ -46,7 +45,7 @@ jobs:
       #        run: git merge origin/temporary-docs-branch --allow-unrelated-histories
       - name: Check for Changes
         run: |
-          if git diff --quiet origin/temporary-docs-branch; then
+          if git diff --quiet origin/main; then
             echo "No changes to push."
             exit 0
           fi
@@ -86,7 +85,6 @@ jobs:
           curl -s -X PUT -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$REPO_URL/pulls/$PR_NUMBER/merge"
 
       - name: Delete temporary branch
-        if: success() # Only delete the temporary branch if the previous steps were successful
         run: |
           git push origin --delete temporary-docs-branch
 
