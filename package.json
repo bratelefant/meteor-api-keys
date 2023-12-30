@@ -4,7 +4,8 @@
   "description": "API keys for Meteor",
   "main": "index.js",
   "scripts": {
-    "test": "meteor test-packages ./ --driver-package meteortesting:mocha",
+    "test": "meteor test-packages ./ --driver-package meteortesting:mocha --once",
+    "test:watch": "meteor test-packages ./ --driver-package meteortesting:mocha",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
