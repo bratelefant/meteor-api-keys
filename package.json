@@ -7,7 +7,6 @@
     "test": "meteor test-packages ./ --driver-package meteortesting:mocha",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
-    
   },
   "keywords": [],
   "author": "",
@@ -18,6 +17,7 @@
   },
   "devDependencies": {
     "chai": "^4.3.4",
+    "eslint": "^8.56.0",
     "mocha": "^9.1.1"
   }
 }

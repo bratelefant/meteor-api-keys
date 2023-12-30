@@ -35,7 +35,11 @@ jobs:
     - run: npm run lint
 
   tests:
-    name: Backend Meteor ${{ matrix.meteor }} tests
+    strategy:
+      matrix:
+        meteor:
+            - '2.14'
+    name: Server Meteor ${{ matrix.meteor }} tests
     runs-on: ubuntu-latest
     steps:
       - name: checkout
