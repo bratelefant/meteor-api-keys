@@ -25,10 +25,7 @@ jobs:
       - name: Generate API Docs
         run: npx jsdoc2md *.js > API.md
 
-      - name: Commit and Push Changes
+      - name: Check for Changes
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add API.md
-          git commit -m "Generate API documentation"
-          git push
+          git diff --quiet || (git config --local user.email "action@github.com" && git config --local user.name "GitHub Action" && git add API.md && git commit -m "Generate API documentation" && git push)
+
