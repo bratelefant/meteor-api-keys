@@ -16,7 +16,7 @@
 ## Constants
 
 <dl>
-<dt><a href="#schema">schema</a></dt>
+<dt><a href="#schema">schema</a> : <code>SimpleSchema</code></dt>
 <dd></dd>
 <dt><a href="#ApiKeys">ApiKeys</a></dt>
 <dd></dd>
@@ -92,7 +92,7 @@ Publishes all keys belonging to the current user
 **Locus**: server  
 <a name="schema"></a>
 
-## schema
+## schema : <code>SimpleSchema</code>
 **Kind**: global constant  
 **Summary**: Represents the API key schema  
 <a name="ApiKeys"></a>
