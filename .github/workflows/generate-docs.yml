@@ -39,8 +39,8 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
-      - name: Merge Latest Changes
-        run: git merge origin/temporary-docs-branch --allow-unrelated-histories
+#      - name: Merge Latest Changes
+#        run: git merge origin/temporary-docs-branch --allow-unrelated-histories
 
       - name: Commit and Push Changes to Temporary Branch
         run: |
