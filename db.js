@@ -3,6 +3,9 @@ import { Mongo } from 'meteor/mongo';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import SimpleSchema from 'simpl-schema';
 
+/**
+ * @summary Represents the API key schema
+ */
 export const schema = new SimpleSchema({
   key: {
     type: String,
@@ -26,6 +29,9 @@ export const schema = new SimpleSchema({
   },
 });
 
+/**
+ * @summary Represents the API key collection
+ */
 export const ApiKeys = new Mongo.Collection('meteor-api-keys');
 
 if (Meteor.isServer) {
