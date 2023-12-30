@@ -35,7 +35,8 @@ jobs:
           fi
 
       - name: Merge Latest Changes
-        run: git merge origin/temporary-docs-branch
+        run: git merge --allow-unrelated-histories -m "Merge remote-tracking branch 'origin/temporary-docs-branch' into temporary-docs-branch" origin/temporary-docs-branch
+  
 
       - name: Commit and Push Changes to Temporary Branch
         run: |
