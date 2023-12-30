@@ -34,13 +34,16 @@ jobs:
             exit 0
           fi
 
+      - name: Set Identity
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
       - name: Merge Latest Changes
         run: git merge origin/temporary-docs-branch --allow-unrelated-histories
 
       - name: Commit and Push Changes to Temporary Branch
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
           git add API.md
           git commit -m "Generate API documentation"
           git push origin temporary-docs-branch
@@ -71,7 +74,7 @@ jobs:
           }'
 
           # Merge the pull request (optional)
-          # curl -s -X PUT -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$REPO_URL/pulls/$PR_NUMBER/merge"
+          curl -s -X PUT -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$REPO_URL/pulls/$PR_NUMBER/merge"
 
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
