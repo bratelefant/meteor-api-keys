@@ -74,7 +74,7 @@ jobs:
             .meteor/local/isopacks
             .meteor/local/bundler-cache/scanner
           key: v2-meteor_build_cache-${{ github.ref }}-${{ github.sha }}
-          restore-key: |
+          restore-keys: |
             v2-meteor_build_cache-
 
       - name: Setup meteor
