@@ -28,5 +28,5 @@ Package.onTest((api) => {
 });
 
 Npm.depends({
-  'simpl-schema': '1.10.2',
+  'simpl-schema': '1.13.1',
 });
