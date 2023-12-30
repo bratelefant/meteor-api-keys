@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main # Change to your default branch
+      - '!temporary-docs-branch' # Ignore changes to the temporary branch
+  pull_request:
+    branches:
+      - '!temporary-docs-branch' # Ignore changes to the temporary branch
 
 jobs:
   generate-docs:
@@ -32,20 +36,19 @@ jobs:
       - name: Generate API Docs
         run: npx jsdoc2md *.js > API.md # Adjust the source files and output file name as needed
 
+      - name: Set Identity
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      #      - name: Merge Latest Changes
+      #        run: git merge origin/temporary-docs-branch --allow-unrelated-histories
       - name: Check for Changes
         run: |
           if git diff --quiet origin/temporary-docs-branch; then
             echo "No changes to push."
             exit 0
           fi
-
-      - name: Set Identity
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-
-#      - name: Merge Latest Changes
-#        run: git merge origin/temporary-docs-branch --allow-unrelated-histories
 
       - name: Commit and Push Changes to Temporary Branch
         run: |

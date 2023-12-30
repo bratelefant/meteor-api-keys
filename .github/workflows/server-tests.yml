@@ -5,10 +5,12 @@ on:
     branches:
       - main
       - devel
+      - '!temporary-docs-branch' # Ignore changes to the temporary branch
   pull_request:
     branches:
       - main
       - devel
+      - '!temporary-docs-branch' # Ignore changes to the temporary branch
 
 jobs:
   lintcode:
