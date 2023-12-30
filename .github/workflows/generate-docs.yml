@@ -24,6 +24,11 @@ jobs:
       - name: Generate API Docs
         run: npx jsdoc2md *.js > API.md # Adjust the source files and output file name as needed
 
+      - name: Set Git User Identity
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
       - name: Fetch Latest Changes from Remote
         run: git fetch origin temporary-docs-branch
 
@@ -36,12 +41,9 @@ jobs:
 
       - name: Merge Latest Changes
         run: git merge --allow-unrelated-histories -m "Merge remote-tracking branch 'origin/temporary-docs-branch' into temporary-docs-branch" origin/temporary-docs-branch
-  
 
       - name: Commit and Push Changes to Temporary Branch
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
           git add API.md
           git commit -m "Generate API documentation"
           git push origin temporary-docs-branch
@@ -72,7 +74,7 @@ jobs:
           }'
 
           # Merge the pull request (optional)
-          curl -s -X PUT -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$REPO_URL/pulls/$PR_NUMBER/merge"
+          # curl -s -X PUT -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$REPO_URL/pulls/$PR_NUMBER/merge"
 
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
