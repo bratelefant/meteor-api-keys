@@ -1,5 +1,6 @@
-[![Server Tests](https://github.com/bratelefant/meteor-api-keys/actions/workflows/server-tests.yml/badge.svg)](https://github.com/bratelefant/meteor-api-keys/actions/workflows/server-tests.yml)
+[![Tests](https://github.com/bratelefant/meteor-api-keys/actions/workflows/server-tests.yml/badge.svg)](https://github.com/bratelefant/meteor-api-keys/actions/workflows/server-tests.yml)
 [![Lint](https://github.com/bratelefant/meteor-api-keys/actions/workflows/lint.yml/badge.svg)](https://github.com/bratelefant/meteor-api-keys/actions/workflows/lint.yml)
+[![API Docs](https://github.com/bratelefant/meteor-api-keys/actions/workflows/generate-docs.yml/badge.svg)](https://github.com/bratelefant/meteor-api-keys/actions/workflows/generate-docs.yml)
 [![Code style: airbnb](https://img.shields.io/badge/code%20style-airbnb-blue.svg)](https://github.com/airbnb/javascript)
 
 # Simple Meteor API Key Management
