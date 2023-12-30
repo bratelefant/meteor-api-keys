@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main # Change to your default branch
-      - '!temporary-docs-branch' # Ignore changes to the temporary branch
 
 jobs:
   generate-docs:
@@ -17,23 +16,31 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: 14 # You can change this to your desired Node.js version
 
       - name: Install Dependencies
         run: npm install
 
       - name: Generate API Docs
-        run: npx jsdoc2md *.js > API.md
+        run: npx jsdoc2md *.js > API.md # Adjust the source files and output file name as needed
+
+      - name: Fetch Latest Changes from Remote
+        run: git fetch origin temporary-docs-branch
 
       - name: Check for Changes
         run: |
-          git diff --quiet || exit 0
+          if git diff --quiet origin/temporary-docs-branch; then
+            echo "No changes to push."
+            exit 0
+          fi
+
+      - name: Merge Latest Changes
+        run: git merge origin/temporary-docs-branch
 
       - name: Commit and Push Changes to Temporary Branch
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git checkout -b temporary-docs-branch
           git add API.md
           git commit -m "Generate API documentation"
           git push origin temporary-docs-branch
