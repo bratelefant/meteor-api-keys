@@ -1,3 +1,6 @@
+[![Server Tests](https://github.com/bratelefant/meteor-api-keys/actions/workflows/server-tests.yml/badge.svg)](https://github.com/bratelefant/meteor-api-keys/actions/workflows/server-tests.yml)
+[![Code style: airbnb](https://img.shields.io/badge/code%20style-airbnb-blue.svg?style=flat-square)](https://github.com/airbnb/javascript)
+
 # Simple Meteor API Key Management
 
 This is a meteor >=2.14 package, which allows to manage api keys that can be used to access a rest api for example. 
