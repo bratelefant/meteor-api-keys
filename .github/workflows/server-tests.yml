@@ -1,0 +1,85 @@
+name: Server Tests
+
+on:
+  push:
+    branches:
+      - master
+      - devel
+  pull_request:
+    branches:
+      - master
+      - devel
+
+jobs:
+  lintcode:
+    name: Server JS lint
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v3
+
+    - name: setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: '14.x'
+
+    - name: cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - run: npm install
+    - run: npm run lint
+
+  tests:
+    name: Backend Meteor ${{ matrix.meteor }} tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      # CACHING
+      - name: Install Meteor
+        id: cache-meteor-install
+        uses: actions/cache@v3
+        with:
+          path: ~/.meteor
+          key: v2-meteor-${{ hashFiles('.meteor/versions') }}
+          restore-keys: |
+                v2-meteor-
+
+      - name: Cache NPM dependencies
+        id: cache-meteor-npm
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: v1-npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+                v1-npm-
+
+      - name: Cache Meteor build
+        id: cache-meteor-build
+        uses: actions/cache@v3
+        with:
+          path: |
+            .meteor/local/resolver-result-cache.json
+            .meteor/local/plugin-cache
+            .meteor/local/isopacks
+            .meteor/local/bundler-cache/scanner
+          key: v2-meteor_build_cache-${{ github.ref }}-${{ github.sha }}
+          restore-key: |
+            v2-meteor_build_cache-
+
+      - name: Setup meteor
+        uses: meteorengineer/setup-meteor@v1
+        with:
+          meteor-release: '2.14'
+
+      - name: Install NPM Dependencies
+        run: meteor npm ci
+
+      - name: Run Tests
+        run: meteor npm run test
