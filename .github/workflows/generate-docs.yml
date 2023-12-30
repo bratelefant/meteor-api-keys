@@ -43,19 +43,31 @@ jobs:
 
       #      - name: Merge Latest Changes
       #        run: git merge origin/temporary-docs-branch --allow-unrelated-histories
-      - name: Check for Changes
+      - name: Check for Changes in API.md
+        id: check_changes
         run: |
-          if git diff --quiet origin/main; then
-            echo "No changes to push."
-            exit 0
+          if git diff --exit-code API.md; then
+            echo "No changes in API.md"
+            echo "##[set-output name=changed;]false"
+          else
+            echo "Changes detected in API.md"
+            echo "##[set-output name=changed;]true"
           fi
 
+      - name: Delete Branch and Exit if No Changes
+        if: steps.check_changes.outputs.changed == 'false'
+        run: |
+          git branch -d temporary-docs-branch
+          echo "No changes to commit, exiting workflow"
+          exit 0
+
       - name: Commit and Push Changes to Temporary Branch
+        if: steps.check_changes.outputs.changed == 'true'
         run: |
           git add API.md
           git commit -m "Generate API documentation"
           git push origin temporary-docs-branch
-
+          
       - name: Create Pull Request
         if: success() # Only create a PR if the previous steps were successful
         id: create_pr
