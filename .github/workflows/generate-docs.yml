@@ -3,8 +3,8 @@ name: Generate API Docs
 on:
   push:
     branches:
-      - main
-      - devel
+      - main # Change to your default branch
+      - '!temporary-docs-branch' # Ignore changes to the temporary branch
 
 jobs:
   generate-docs:
@@ -27,5 +27,44 @@ jobs:
 
       - name: Check for Changes
         run: |
-          git diff --quiet || (git config --local user.email "action@github.com" && git config --local user.name "GitHub Action" && git add API.md && git commit -m "Generate API documentation" && git push)
+          git diff --quiet || exit 0
 
+      - name: Commit and Push Changes to Temporary Branch
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git checkout -b temporary-docs-branch
+          git add API.md
+          git commit -m "Generate API documentation"
+          git push origin temporary-docs-branch
+
+      - name: Create Pull Request
+        if: success() # Only create a PR if the previous steps were successful
+        id: create_pr
+        run: |
+          GITHUB_TOKEN="${{ secrets.PAT_TOKEN }}"
+          REPO_URL="${{ github.repository }}"
+          HEAD_BRANCH="temporary-docs-branch"
+          BASE_BRANCH="main"
+          TITLE="Generate API Documentation"
+          BODY="Automatically generated API documentation."
+
+          PR_RESPONSE=$(curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" -d "{
+            \"title\": \"$TITLE\",
+            \"body\": \"$BODY\",
+            \"head\": \"$HEAD_BRANCH\",
+            \"base\": \"$BASE_BRANCH\"
+          }" "https://api.github.com/repos/$REPO_URL/pulls")
+
+          PR_NUMBER=$(echo "$PR_RESPONSE" | jq -r '.number')
+
+          # Approve the pull request
+          curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$REPO_URL/pulls/$PR_NUMBER/reviews" -d '{
+            "event": "APPROVE"
+          }'
+
+          # Merge the pull request (optional)
+          # curl -s -X PUT -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$REPO_URL/pulls/$PR_NUMBER/merge"
+
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
