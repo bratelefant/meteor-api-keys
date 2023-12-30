@@ -35,7 +35,7 @@ jobs:
           fi
 
       - name: Merge Latest Changes
-        run: git merge origin/temporary-docs-branch
+        run: git merge origin/temporary-docs-branch --allow-unrelated-histories
 
       - name: Commit and Push Changes to Temporary Branch
         run: |
