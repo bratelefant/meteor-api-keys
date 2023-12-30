@@ -1,129 +1,216 @@
-# API Documentation
+## Classes
 
-## Class: ApiKeysSrv
+<dl>
+<dt><a href="#ApiKeysSrv">ApiKeysSrv</a></dt>
+<dd></dd>
+</dl>
 
-### Constructor
+## Members
 
-- `new ApiKeysSrv({ apiKeyName, apiRouteStartsWith })`
+<dl>
+<dt><a href="#publishApiKeys">publishApiKeys</a> ⇒ <code>Cursor</code></dt>
+<dd><p>Publishes all keys belonging to the current user</p>
+</dd>
+</dl>
 
-Creates a new instance of `ApiKeysSrv`.
+## Functions
 
-**Parameters:**
+<dl>
+<dt><a href="#generateKey">generateKey()</a> ⇒ <code>String</code></dt>
+<dd><p>Generate a key, internally uses Random.secret</p>
+</dd>
+<dt><a href="#insertKey">insertKey(param0)</a> ⇒ <code>Promise.&lt;Object&gt;</code></dt>
+<dd><p>Ensure that the key is present in the database, if it is not, insert it
+otherwise update it. Also updates the createdAt field if the key is being
+updated.</p>
+</dd>
+<dt><a href="#createKey">createKey(param0)</a> ⇒ <code>Promise.&lt;String&gt;</code></dt>
+<dd><p>Inserts a randomly generated key into the database</p>
+</dd>
+<dt><a href="#createKeyForCurrentUser">createKeyForCurrentUser(param0)</a> ⇒ <code>Promise.&lt;String&gt;</code></dt>
+<dd><p>Creates a key for the current user.</p>
+</dd>
+<dt><a href="#deleteKey">deleteKey(param0)</a> ⇒ <code>Object</code></dt>
+<dd><p>Removes a key from the database.</p>
+</dd>
+<dt><a href="#findKey">findKey(param0)</a> ⇒ <code>Promise.&lt;Object&gt;</code></dt>
+<dd><p>Finds a key in the database</p>
+</dd>
+<dt><a href="#findKeysForUserId">findKeysForUserId(param0)</a> ⇒ <code>Cursor</code></dt>
+<dd><p>Gets the Cursor for all keys belonging to a user</p>
+</dd>
+<dt><a href="#isValid">isValid(param0)</a> ⇒ <code>Promise.&lt;Boolean&gt;</code></dt>
+<dd><p>Checks if a key is valid</p>
+</dd>
+<dt><a href="#middleware">middleware([exceptions])</a> ⇒ <code>function</code></dt>
+<dd><p>Middleware for Express</p>
+</dd>
+</dl>
 
-- `apiKeyName` (String, optional): The name of the header key to use for the API key. Defaults to 'X-MeteorApp-ApiKey'.
-- `apiRouteStartsWith` (String, optional): The route to use for the API key. Defaults to '/api/v'.
+<a name="ApiKeysSrv"></a>
 
-### Methods
+## ApiKeysSrv
+**Kind**: global class  
+**Locus**: server  
+<a name="new_ApiKeysSrv_new"></a>
 
-#### `ApiKeysSrv.generateKey()`
+### new ApiKeysSrv(options)
+ApiKeysSrv
 
-Generates a new API key.
 
-**Returns:**
+| Param | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> |  |
+| [options.apiKeyName] | <code>String</code> | The name of the header key to use for the API key.                                        Defaults to 'X-MeteorApp-ApiKey'. |
+| [options.apiRouteStartsWith] | <code>String</code> | The route to use for the API key.                                                Defaults to '/api/v' |
 
-- A randomly generated key (String).
+**Example**  
+```javascript
+const apiKeysSrv = new ApiKeysSrv(
+                     {
+                       apiKeyName: 'X-MeteorApp-ApiKey',
+                       apiRouteStartsWith: '/api/v'
+                     }
+                   );
+```
+<a name="publishApiKeys"></a>
 
-#### `ApiKeysSrv.insertKey({ key, note, belongsToUserId, createdByUserId })`
+## publishApiKeys ⇒ <code>Cursor</code>
+Publishes all keys belonging to the current user
 
-Ensures that the key is present in the database, if it is not, insert it otherwise update it. Also updates the createdAt field if the key is being updated.
+**Kind**: global variable  
+**Returns**: <code>Cursor</code> - - A cursor for all keys belonging to the user  
+**Locus**: server  
+<a name="generateKey"></a>
 
-**Parameters:**
+## generateKey() ⇒ <code>String</code>
+Generate a key, internally uses Random.secret
 
-- `key` (String): The key to insert or update.
-- `note` (String, optional): A note to associate with the key.
-- `belongsToUserId` (String, optional): The user id that the key belongs to.
-- `createdByUserId` (String): The user id that created the key.
+**Kind**: global function  
+**Returns**: <code>String</code> - - A randomly generated key  
+<a name="insertKey"></a>
 
-**Returns:**
+## insertKey(param0) ⇒ <code>Promise.&lt;Object&gt;</code>
+Ensure that the key is present in the database, if it is not, insert it
+otherwise update it. Also updates the createdAt field if the key is being
+updated.
 
-- An object with properties: numberAffected, insertedId (if inserted).
+**Kind**: global function  
+**Returns**: <code>Promise.&lt;Object&gt;</code> - - has properties: numberAffected, insertedId (if inserted)  
 
-#### `ApiKeysSrv.createKey({ note, belongsToUserId, createdByUserId })`
+| Param | Type | Description |
+| --- | --- | --- |
+| param0 | <code>Object</code> |  |
+| param0.key | <code>String</code> | The key to insert or update |
+| [param0.note] | <code>String</code> | A note to associate with the key |
+| [param0.belongsToUserId] | <code>String</code> | The user id that the key belongs to |
+| param0.createdByUserId | <code>String</code> | The user id that created the key |
 
-Inserts a randomly generated key into the database.
+<a name="createKey"></a>
 
-**Parameters:**
+## createKey(param0) ⇒ <code>Promise.&lt;String&gt;</code>
+Inserts a randomly generated key into the database
 
-- `note` (String, optional): A note to associate with the key.
-- `belongsToUserId` (String, optional): The user id that the key belongs to.
-- `createdByUserId` (String): The user id that created the key.
+**Kind**: global function  
+**Returns**: <code>Promise.&lt;String&gt;</code> - - The _id of the key that was inserted  
 
-**Returns:**
+| Param | Type | Description |
+| --- | --- | --- |
+| param0 | <code>Object</code> |  |
+| [param0.note] | <code>String</code> | A note to associate with the key |
+| [param0.belongsToUserId] | <code>String</code> | The user id that the key belongs to |
+| param0.createdByUserId | <code>String</code> | The user id that created the key |
 
-- The _id of the key that was inserted (String).
+<a name="createKeyForCurrentUser"></a>
 
-#### `ApiKeysSrv.createKeyForCurrentUser({ note })`
-
+## createKeyForCurrentUser(param0) ⇒ <code>Promise.&lt;String&gt;</code>
 Creates a key for the current user.
 
-**Parameters:**
+**Kind**: global function  
+**Returns**: <code>Promise.&lt;String&gt;</code> - - The _id of the key that was inserted  
+**Throws**:
 
-- `note` (String, optional): An optional note to associate with the key.
+- <code>Meteor.Error</code> - Throws a Meteor.Error if there is no current user
 
-**Throws:**
 
-- A `Meteor.Error` if no current user is present.
+| Param | Type | Description |
+| --- | --- | --- |
+| param0 | <code>Object</code> |  |
+| [param0.note] | <code>String</code> | An optional note to associate with the key |
 
-**Returns:**
+<a name="deleteKey"></a>
 
-- The _id of the key that was inserted (String).
-
-#### `ApiKeysSrv.deleteKey({ key })`
-
+## deleteKey(param0) ⇒ <code>Object</code>
 Removes a key from the database.
 
-**Parameters:**
+**Kind**: global function  
+**Returns**: <code>Object</code> - - has properties: numberAffected  
 
-- `key` (String): The key to remove.
+| Param | Type | Description |
+| --- | --- | --- |
+| param0 | <code>Object</code> |  |
+| param0.key | <code>String</code> | The key to remove |
 
-**Returns:**
+<a name="findKey"></a>
 
-- An object with properties: numberAffected.
+## findKey(param0) ⇒ <code>Promise.&lt;Object&gt;</code>
+Finds a key in the database
 
-#### `ApiKeysSrv.findKey({ key })`
+**Kind**: global function  
+**Returns**: <code>Promise.&lt;Object&gt;</code> - - props: _id, key, note, belongsToUserId, createdAt, createdByUserId  
 
-Finds a key in the database.
+| Param | Type | Description |
+| --- | --- | --- |
+| param0 | <code>Object</code> |  |
+| param0.key | <code>String</code> | The key to find |
 
-**Parameters:**
+<a name="findKeysForUserId"></a>
 
-- `key` (String): The key to find.
+## findKeysForUserId(param0) ⇒ <code>Cursor</code>
+Gets the Cursor for all keys belonging to a user
 
-**Returns:**
+**Kind**: global function  
+**Returns**: <code>Cursor</code> - - A cursor for all keys belonging to the user  
 
-- An object with properties: _id, key, note, belongsToUserId, createdAt, createdByUserId.
+| Param | Type | Description |
+| --- | --- | --- |
+| param0 | <code>Object</code> |  |
+| param0.belongsToUserId | <code>String</code> | The user id to find keys for |
 
-#### `ApiKeysSrv.findKeysForUserId({ belongsToUserId })`
+<a name="isValid"></a>
 
-Gets the Cursor for all keys belonging to a user.
+## isValid(param0) ⇒ <code>Promise.&lt;Boolean&gt;</code>
+Checks if a key is valid
 
-**Parameters:**
+**Kind**: global function  
+**Returns**: <code>Promise.&lt;Boolean&gt;</code> - - Resolves to true if the key is valid, false otherwise  
 
-- `belongsToUserId` (String): The user id to find keys for.
+| Param | Type | Description |
+| --- | --- | --- |
+| param0 | <code>Object</code> |  |
+| param0.key | <code>String</code> | The key to check |
 
-**Returns:**
+<a name="middleware"></a>
 
-- A cursor for all keys belonging to the user.
+## middleware([exceptions]) ⇒ <code>function</code>
+Middleware for Express
 
-#### `ApiKeysSrv.isValid({ key })`
+**Kind**: global function  
+**Returns**: <code>function</code> - - Express middleware  
 
-Checks if a key is valid.
+| Param | Type | Description |
+| --- | --- | --- |
+| [exceptions] | <code>Array</code> | An array of routes to exclude from the middleware |
 
-**Parameters:**
-
-- `key` (String): The key to check.
-
-**Returns:**
-
-- Resolves to true if the key is valid, false otherwise (Promise<Boolean>).
-
-#### `ApiKeysSrv.middleware(exceptions = [])`
-
-Middleware for Express.
-
-**Parameters:**
-
-- `exceptions` (Array, optional): An array of routes to exclude from the middleware.
-
-**Returns:**
-
-- Express middleware (Function).
+**Example**  
+```javascript
+const apiKeysSrv = new ApiKeysSrv();
+const app = express();
+app.use(apiKeysSrv.middleware(['/api/v1/users/login']));
+```
+**Example**  
+```javascript
+const apiKeysSrv = new ApiKeysSrv();
+const app = express();
+app.use(apiKeysSrv.middleware());
+```

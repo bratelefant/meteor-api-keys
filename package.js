@@ -16,6 +16,7 @@ Package.onUse((api) => {
   api.use('aldeed:collection2@3.5.0', ['server']);
   api.use(['mongo', 'check', 'random'], ['server']);
   api.mainModule('server.js', ['server']);
+  api.mainModule('client.js', ['client']);
 });
 
 Package.onTest((api) => {
@@ -25,8 +26,4 @@ Package.onTest((api) => {
   api.use('meteortesting:mocha');
   api.use('bratelefant:meteor-api-keys');
   api.mainModule('tests.js');
-});
-
-Npm.depends({
-  'simpl-schema': '1.13.1',
 });

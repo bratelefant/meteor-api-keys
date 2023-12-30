@@ -1,61 +1,8 @@
 /* eslint-disable import/no-unresolved */
 import { Random } from 'meteor/random';
-import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import SimpleSchema from 'simpl-schema';
-
-export const schema = new SimpleSchema({
-  key: {
-    type: String,
-    max: 100,
-  },
-  note: {
-    type: String,
-    optional: true,
-  },
-  belongsToUserId: {
-    type: String,
-    max: 100,
-    optional: true,
-  },
-  createdAt: {
-    type: Date,
-  },
-  createdByUserId: {
-    type: String,
-    max: 100,
-  },
-});
-
-export const ApiKeys = new Mongo.Collection('meteor-api-keys');
-
-ApiKeys.createIndexAsync(
-  {
-    key: 1,
-  },
-  {
-    unique: true,
-  },
-);
-
-ApiKeys.createIndexAsync({
-  belongsToUserId: 1,
-});
-
-ApiKeys.attachSchema(schema);
-
-ApiKeys.deny({
-  insert() {
-    return true;
-  },
-  update() {
-    return true;
-  },
-  remove() {
-    return true;
-  },
-});
+import { ApiKeys } from './db';
 
 /**
  * ApiKeysSrv
@@ -76,7 +23,7 @@ ApiKeys.deny({
  *                    );
  * ```
  */
-export class ApiKeysSrv {
+export default class ApiKeysSrv {
   constructor({ apiKeyName, apiRouteStartsWith }) {
     this.apiKeyName = apiKeyName || 'X-MeteorApp-ApiKey';
     this.apiRouteStartsWith = apiRouteStartsWith || '/api/v';
@@ -96,12 +43,13 @@ export class ApiKeysSrv {
    * Ensure that the key is present in the database, if it is not, insert it
    * otherwise update it. Also updates the createdAt field if the key is being
    * updated.
+   * @static Invoke via `ApiKeysSrv.insertKey`.
    * @param {Object} param0
    * @param {String} param0.key - The key to insert or update
    * @param {String} [param0.note] - A note to associate with the key
    * @param {String} [param0.belongsToUserId] - The user id that the key belongs to
    * @param {String} param0.createdByUserId - The user id that created the key
-   * @returns {Object} - has properties: numberAffected, insertedId (if inserted)
+   * @returns {Promise<Object>} - has properties: numberAffected, insertedId (if inserted)
    */
   static async insertKey({
     key, note, belongsToUserId, createdByUserId,
@@ -127,11 +75,12 @@ export class ApiKeysSrv {
 
   /**
    * Inserts a randomly generated key into the database
+   *
    * @param {Object} param0
    * @param {String} [param0.note] - A note to associate with the key
    * @param {String} [param0.belongsToUserId] - The user id that the key belongs to
    * @param {String} param0.createdByUserId - The user id that created the key
-   * @returns {String} - The _id of the key that was inserted
+   * @returns {Promise<String>} - The _id of the key that was inserted
    */
   async createKey({ note, belongsToUserId, createdByUserId }) {
     const key = this.constructor.generateKey();
@@ -151,11 +100,11 @@ export class ApiKeysSrv {
   }
 
   /**
-   * Creates a key for the current user
+   * Creates a key for the current user.
    * @param {Object} param0
    * @param {String} [param0.note] - An optional note to associate with the key
    * @throws {Meteor.Error} - Throws a Meteor.Error if there is no current user
-   * @returns {String} - The _id of the key that was inserted
+   * @returns {Promise<String>} - The _id of the key that was inserted
    */
   async createKeyForCurrentUser({ note }) {
     check(note, Match.Maybe(String));
@@ -176,7 +125,8 @@ export class ApiKeysSrv {
   }
 
   /**
-   * Removes a key from the database
+   * Removes a key from the database.
+   * @static Invoke via `ApiKeysSrv.deleteKey`
    * @param {Object} param0
    * @param {String} param0.key - The key to remove
    * @returns {Object} - has properties: numberAffected
@@ -190,9 +140,10 @@ export class ApiKeysSrv {
 
   /**
    * Finds a key in the database
+   * @static Invoke via `ApiKeysSrv.findKey`
    * @param {Object} param0
    * @param {String} param0.key - The key to find
-   * @returns {Object} - has properties: _id, key, note, belongsToUserId, createdAt, createdByUserId
+   * @returns {Promise<Object>} - props: _id, key, note, belongsToUserId, createdAt, createdByUserId
    */
   static async findKey({ key }) {
     check(key, String);
@@ -203,6 +154,7 @@ export class ApiKeysSrv {
 
   /**
    * Gets the Cursor for all keys belonging to a user
+   * @static Invoke via `ApiKeysSrv.findKeysForUserId`
    * @param {Object} param0
    * @param {String} param0.belongsToUserId - The user id to find keys for
    * @returns {Cursor} - A cursor for all keys belonging to the user
@@ -293,6 +245,10 @@ Meteor.publish('meteorApiKeys', function publishApiKeys() {
 
   return ApiKeys.find(
     { belongsToUserId: this.userId },
-    { fields: { key: 1, createdAt: 1, belongsToUserId: 1 } },
+    {
+      fields: {
+        key: 1, createdAt: 1, note: 1, belongsToUserId: 1,
+      },
+    },
   );
 });

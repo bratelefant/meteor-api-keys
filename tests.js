@@ -2,7 +2,8 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { expect, assert } from 'chai';
 import sinon from 'sinon';
-import { ApiKeys, ApiKeysSrv } from './server';
+import { ApiKeys } from './db';
+import ApiKeysSrv from './server';
 
 describe('ApiKeysSrv', () => {
   beforeEach(async () => {
