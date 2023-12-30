@@ -30,7 +30,7 @@ export const schema = new SimpleSchema({
 });
 
 /**
- * @summary Represents the API key collection
+ * @summary Represents the API key collection, which is a Mongo collection.
  */
 export const ApiKeys = new Mongo.Collection('meteor-api-keys');
 
