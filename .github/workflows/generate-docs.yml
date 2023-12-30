@@ -21,11 +21,16 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Generate API Docs
-        run: npx jsdoc2md *.js > API.md # Adjust the source files and output file name as needed
+      - name: Create temporary branch
+        run: |
+          git checkout -b temporary-docs-branch
+          git push origin temporary-docs-branch
 
       - name: Fetch Latest Changes from Remote
         run: git fetch origin temporary-docs-branch
+
+      - name: Generate API Docs
+        run: npx jsdoc2md *.js > API.md # Adjust the source files and output file name as needed
 
       - name: Check for Changes
         run: |
@@ -75,6 +80,11 @@ jobs:
 
           # Merge the pull request (optional)
           curl -s -X PUT -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$REPO_URL/pulls/$PR_NUMBER/merge"
+
+      - name: Delete temporary branch
+        if: success() # Only delete the temporary branch if the previous steps were successful
+        run: |
+          git push origin --delete temporary-docs-branch
 
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
