@@ -16,7 +16,7 @@ describe('ApiKeysSrv', () => {
 
   describe('generateKey', () => {
     it('should generate a key', () => {
-      const key = ApiKeysSrv.generateKey();
+      const key = new ApiKeysSrv({}).generateKey();
       expect(key).to.be.a('string');
       expect(key.length).to.equal(32);
     });
@@ -30,7 +30,7 @@ describe('ApiKeysSrv', () => {
         belongsToUserId: 'testUser',
         createdByUserId: 'testCreator',
       };
-      const { insertedId } = await ApiKeysSrv.insertKey(params);
+      const { insertedId } = await new ApiKeysSrv({}).insertKey(params);
       const result = await ApiKeys.findOneAsync({ _id: insertedId });
 
       expect(result).to.be.an('object');
@@ -54,7 +54,7 @@ describe('ApiKeysSrv', () => {
         belongsToUserId: 'testUser',
         createdByUserId: 'testCreator',
       };
-      const { insertedId } = await ApiKeysSrv.insertKey(params);
+      const { insertedId } = await new ApiKeysSrv({}).insertKey(params);
 
       const newParams = {
         key: 'testKey',
@@ -62,7 +62,7 @@ describe('ApiKeysSrv', () => {
         belongsToUserId: 'testUser2',
         createdByUserId: 'testCreator2',
       };
-      await ApiKeysSrv.insertKey(newParams);
+      await new ApiKeysSrv({}).insertKey(newParams);
       const result = await ApiKeys.findOneAsync({ _id: insertedId });
 
       expect(result).to.be.an('object');
@@ -178,7 +178,7 @@ describe('ApiKeysSrv', () => {
       };
       const secondKeyId = await ApiKeys.insertAsync(secondKey);
 
-      await ApiKeysSrv.deleteKey({ key: 'testKey1' });
+      await new ApiKeysSrv({}).deleteKey({ key: 'testKey1' });
 
       const result = await ApiKeys.find({}).fetchAsync();
       expect(result).to.have.deep.members([{ _id: secondKeyId, ...secondKey }]);
@@ -206,7 +206,7 @@ describe('ApiKeysSrv', () => {
       };
       await ApiKeys.insertAsync(secondKey);
 
-      const result = await ApiKeysSrv.findKey({ key: 'testKey1' });
+      const result = await new ApiKeysSrv({}).findKey({ key: 'testKey1' });
 
       expect(result).to.deep.equal({ _id: firstKeyId, ...firstKey });
     });
@@ -238,7 +238,7 @@ describe('ApiKeysSrv', () => {
       };
       const thirdId = await ApiKeys.insertAsync(thirdKey);
 
-      const result = await ApiKeysSrv.findKeysForUserId({
+      const result = await new ApiKeysSrv({}).findKeysForUserId({
         belongsToUserId: 'testUser',
       }).fetchAsync();
 
@@ -255,10 +255,11 @@ describe('ApiKeysSrv', () => {
 
   describe('isValid', () => {
     it('should validate a key', async () => {
+      const apiKeySrv = new ApiKeysSrv({});
       const findKeyStub = sinon
-        .stub(ApiKeysSrv, 'findKey')
+        .stub(apiKeySrv, 'findKey')
         .resolves({ key: 'testKey' });
-      const result = await new ApiKeysSrv({}).isValid({ key: 'testKey' });
+      const result = await apiKeySrv.isValid({ key: 'testKey' });
 
       assert.isTrue(result);
       assert.isTrue(findKeyStub.calledOnce);

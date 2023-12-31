@@ -35,7 +35,7 @@ export default class ApiKeysSrv {
    * Generate a key, internally uses Random.secret
    * @returns {String} - A randomly generated key
    */
-  static generateKey() {
+  generateKey() {
     return Random.secret(32);
   }
 
@@ -43,7 +43,6 @@ export default class ApiKeysSrv {
    * Ensure that the key is present in the database, if it is not, insert it
    * otherwise update it. Also updates the createdAt field if the key is being
    * updated.
-   * @static Invoke via `ApiKeysSrv.insertKey`.
    * @param {Object} param0
    * @param {String} param0.key - The key to insert or update
    * @param {String} [param0.note] - A note to associate with the key
@@ -51,7 +50,7 @@ export default class ApiKeysSrv {
    * @param {String} param0.createdByUserId - The user id that created the key
    * @returns {Promise<Object>} - has properties: numberAffected, insertedId (if inserted)
    */
-  static async insertKey({
+  async insertKey({
     key, note, belongsToUserId, createdByUserId,
   }) {
     check(key, String);
@@ -83,13 +82,13 @@ export default class ApiKeysSrv {
    * @returns {Promise<String>} - The _id of the key that was inserted
    */
   async createKey({ note, belongsToUserId, createdByUserId }) {
-    const key = this.constructor.generateKey();
+    const key = this.generateKey();
     check(key, String);
     check(note, Match.Maybe(String));
     check(belongsToUserId, Match.Maybe(String));
     check(createdByUserId, String);
 
-    const { insertedId: result } = await this.constructor.insertKey({
+    const { insertedId: result } = await this.insertKey({
       key,
       note,
       belongsToUserId,
@@ -126,12 +125,11 @@ export default class ApiKeysSrv {
 
   /**
    * Removes a key from the database.
-   * @static Invoke via `ApiKeysSrv.deleteKey`
    * @param {Object} param0
    * @param {String} param0.key - The key to remove
    * @returns {Object} - has properties: numberAffected
    */
-  static async deleteKey({ key }) {
+  async deleteKey({ key }) {
     check(key, String);
     const result = await ApiKeys.removeAsync({ key });
 
@@ -140,12 +138,11 @@ export default class ApiKeysSrv {
 
   /**
    * Finds a key in the database
-   * @static Invoke via `ApiKeysSrv.findKey`
    * @param {Object} param0
    * @param {String} param0.key - The key to find
    * @returns {Promise<Object>} - props: _id, key, note, belongsToUserId, createdAt, createdByUserId
    */
-  static async findKey({ key }) {
+  async findKey({ key }) {
     check(key, String);
     const result = await ApiKeys.findOneAsync({ key });
 
@@ -154,12 +151,11 @@ export default class ApiKeysSrv {
 
   /**
    * Gets the Cursor for all keys belonging to a user
-   * @static Invoke via `ApiKeysSrv.findKeysForUserId`
    * @param {Object} param0
    * @param {String} param0.belongsToUserId - The user id to find keys for
    * @returns {Cursor} - A cursor for all keys belonging to the user
    */
-  static findKeysForUserId({ belongsToUserId }) {
+  findKeysForUserId({ belongsToUserId }) {
     check(belongsToUserId, String);
     const result = ApiKeys.find({ belongsToUserId });
 
@@ -174,7 +170,7 @@ export default class ApiKeysSrv {
    */
   async isValid({ key }) {
     check(key, String);
-    const result = await this.constructor.findKey({ key });
+    const result = await this.findKey({ key });
 
     return !!result;
   }

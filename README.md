@@ -27,7 +27,7 @@ Meteor.methods({
     async 'removeApiKey' (key){
         const isAllowed = await doMyPolicyChecks();
         if (!isAllowed) throw new Meteor.Error(403, "Not allowed");
-        await myMeteorApiKeySrv.delete({ key });
+        await myMeteorApiKeySrv.deleteKey({ key });
     },
 
     async 'createKeyForCurrentUser' (note){
