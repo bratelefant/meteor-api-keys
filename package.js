@@ -1,6 +1,6 @@
 Package.describe({
   name: 'bratelefant:meteor-api-keys',
-  version: '1.0.1',
+  version: '1.0.2',
   // Brief, one-line summary of the package.
   summary: 'Provide a simple way to manage API keys, express middleware included.',
   // URL to the Git repository containing the source code for this package.
