@@ -2,6 +2,7 @@
 import { Mongo } from 'meteor/mongo';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import SimpleSchema from 'simpl-schema';
+import 'meteor/aldeed:collection2/static';
 
 /**
  * @summary Represents the API key schema

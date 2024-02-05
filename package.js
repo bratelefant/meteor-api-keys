@@ -13,7 +13,7 @@ Package.describe({
 Package.onUse((api) => {
   api.versionsFrom(['2.14', '3.0-beta.0']);
   api.use('ecmascript');
-  api.use('aldeed:collection2@3.5.0', ['server']);
+  api.use('aldeed:collection2@4.0.0', ['server']);
   api.use(['mongo', 'check', 'random'], ['server']);
   api.mainModule('server.js', ['server']);
   api.mainModule('client.js', ['client']);
