@@ -11,7 +11,7 @@ Package.describe({
 });
 
 Package.onUse((api) => {
-  api.versionsFrom('2.14');
+  api.versionsFrom(['2.14', '3.0-beta.0']);
   api.use('ecmascript');
   api.use('aldeed:collection2@3.5.0', ['server']);
   api.use(['mongo', 'check', 'random'], ['server']);
@@ -21,7 +21,7 @@ Package.onUse((api) => {
 
 Package.onTest((api) => {
   api.use('ecmascript');
-  api.use('aldeed:collection2@3.5.0', ['server']);
+  api.use('aldeed:collection2@4.0.0', ['server']);
   api.use(['accounts-password', 'mongo', 'check', 'random'], ['server']);
   api.use('meteortesting:mocha');
   api.use('bratelefant:meteor-api-keys');
